@@ -25,7 +25,6 @@ fn main() {
     client.login();
 
     loop {
-        // get posts and filter out posts that are locked
         println!("Getting posts");
         let post_list_resp = match client.get_posts("NewComments", "10") {
             Ok(resp) => resp,
