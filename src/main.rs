@@ -83,7 +83,7 @@ fn main() {
                     } else {
                         save_to_db(comment.id);
 
-                        // if link has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
+                        // if comment.content has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
                         let link_md_re = Regex::new(r"\[.+\]\((.+)\)").unwrap();
                         let extracted_link = link_md_re.captures(&comment.content).and_then(|caps| Some(caps.get(1).unwrap().as_str()));
                         let title_re = Regex::new(r"wikipedia.org/wiki/([0-9\w_()~\-%&$,]+)").unwrap();
@@ -92,7 +92,7 @@ fn main() {
                             Some(caps) => caps.get(1).unwrap().as_str(),
                             None => continue,
                         };
-                        
+
                         let wiki_page = match get_wiki_page(title.to_string()) {
                             Some(wiki_page) => wiki_page,
                             None => continue,
