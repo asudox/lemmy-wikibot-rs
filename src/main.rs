@@ -85,7 +85,7 @@ fn main() {
 
                         // if comment.content has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
                         let link_md_re = Regex::new(r"\[.+\]\((.+)\)").unwrap();
-                        let extracted_link = link_md_re.captures(&comment.content).and_then(|caps| Some(caps.get(1).unwrap().as_str()));
+                        let extracted_link = link_md_re.captures(&comment.content).map(|caps| caps.get(1).unwrap().as_str());
                         let title_re = Regex::new(r"wikipedia.org/wiki/([0-9\w_()~\-%&$,]+)").unwrap();
                         let haystack = if let Some(extracted) = extracted_link{ extracted } else { &comment.content };
                         let title = match title_re.captures(haystack) {
