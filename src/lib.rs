@@ -10,7 +10,7 @@ pub fn comment_builder(title: &str, summary: &str) -> String {
 
 > {}
 
-[^article^](https://en.wikipedia.org/wiki/{}) ^|^ [about](https://lemmy.world/u/wikibot)
+[^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)
 ", summary, title)
 }
 
