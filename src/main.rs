@@ -31,13 +31,16 @@ fn main() {
             Err(err) => {
                 if err.is_status() {
                     match err.status().unwrap() {
-                        StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
+                        StatusCode::TOO_MANY_REQUESTS => {
                             sleep(Duration::new(5, 0));
                             continue;
                         },
                         StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                         _ => panic!("Unexpected status code: {}", err),
                     }
+                } else if err.is_timeout() {
+                    sleep(Duration::new(5, 0));
+                    continue;
                 } else {
                     panic!("Unexpected error occurred: {}", err);
                 }
@@ -56,13 +59,16 @@ fn main() {
                         Err(err) => {
                             if err.is_status() {
                                 match err.status().unwrap() {
-                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
+                                    StatusCode::TOO_MANY_REQUESTS => {
                                         sleep(Duration::new(5, 0));
                                         continue;
                                     },
                                     StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                                     _ => panic!("Unexpected status code: {}", err),
                                 }
+                            } else if err.is_timeout() {
+                                sleep(Duration::new(5, 0));
+                                continue;
                             } else {
                                 panic!("Unexpected error occurred: {}", err);
                             }
@@ -92,13 +98,16 @@ fn main() {
                             Err(err) => {
                                 if err.is_status() {
                                     match err.status().unwrap() {
-                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
+                                        StatusCode::TOO_MANY_REQUESTS => {
                                             sleep(Duration::new(5, 0));
                                             continue;
                                         },
                                         StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                                         _ => panic!("Unexpected status code: {}", err),
                                     }
+                                } else if err.is_timeout() {
+                                    sleep(Duration::new(5, 0));
+                                    continue;
                                 } else {
                                     panic!("Unexpected error occurred: {}", err);
                                 }
