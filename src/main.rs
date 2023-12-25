@@ -32,7 +32,10 @@ fn main() {
             Err(err) => {
                 if err.is_status() {
                     match err.status().unwrap() {
-                        StatusCode::TOO_MANY_REQUESTS => todo!("Wait"),
+                        StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
+                            sleep(Duration::new(5, 0));
+                            continue;
+                        },
                         StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                         _ => panic!("Unexpected status code: {}", err),
                     }
@@ -54,13 +57,11 @@ fn main() {
                         Err(err) => {
                             if err.is_status() {
                                 match err.status().unwrap() {
-                                    StatusCode::TOO_MANY_REQUESTS => {
+                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
                                         sleep(Duration::new(5, 0));
                                         continue;
-                                    }
-                                    StatusCode::INTERNAL_SERVER_ERROR => {
-                                        panic!("INTERNAL_SERVER_ERROR")
-                                    }
+                                    },
+                                    StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                                     _ => panic!("Unexpected status code: {}", err),
                                 }
                             } else {
@@ -92,13 +93,11 @@ fn main() {
                             Err(err) => {
                                 if err.is_status() {
                                     match err.status().unwrap() {
-                                        StatusCode::TOO_MANY_REQUESTS => {
+                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::GATEWAY_TIMEOUT => {
                                             sleep(Duration::new(5, 0));
                                             continue;
-                                        }
-                                        StatusCode::INTERNAL_SERVER_ERROR => {
-                                            panic!("INTERNAL_SERVER_ERROR")
-                                        }
+                                        },
+                                        StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                                         _ => panic!("Unexpected status code: {}", err),
                                     }
                                 } else {
