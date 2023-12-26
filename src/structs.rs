@@ -16,23 +16,29 @@ pub struct GetPostsResponse {
     pub posts: Vec<PostView>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Comment {
     pub id: u32,
     pub content: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct CommentView {
     pub comment: Comment,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct GetCommentsResponse {
     pub comments: Vec<CommentView>,
 }
 
+#[derive(Deserialize)]
+pub struct LoginResponse {
+    pub jwt: String,
+}
+
 pub struct CustomWikipediaPage {
-    pub title: String,
-    pub summary: String,
+    pub page_title: String,
+    pub content: String,
+    pub is_section: bool,
 }

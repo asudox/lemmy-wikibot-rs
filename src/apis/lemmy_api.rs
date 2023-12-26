@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use crate::structs::{GetCommentsResponse, GetPostsResponse};
-use serde::Deserialize;
+use crate::structs::{GetCommentsResponse, GetPostsResponse, LoginResponse};
 
 pub struct LemmyClient {
     username_or_email: String,
@@ -9,11 +8,6 @@ pub struct LemmyClient {
     instance: String,
     community: String,
     jwt: Option<String>,
-}
-
-#[derive(Deserialize)]
-struct LoginResponse {
-    jwt: String,
 }
 
 impl LemmyClient {

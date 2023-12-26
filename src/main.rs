@@ -31,10 +31,10 @@ fn main() {
             Err(err) => {
                 if err.is_status() {
                     match err.status().unwrap() {
-                        StatusCode::TOO_MANY_REQUESTS => {
+                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
                             sleep(Duration::new(5, 0));
                             continue;
-                        },
+                        }
                         StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
                         _ => panic!("Unexpected status code: {}", err),
                     }
@@ -59,11 +59,13 @@ fn main() {
                         Err(err) => {
                             if err.is_status() {
                                 match err.status().unwrap() {
-                                    StatusCode::TOO_MANY_REQUESTS => {
+                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
                                         sleep(Duration::new(5, 0));
                                         continue;
-                                    },
-                                    StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
+                                    }
+                                    StatusCode::INTERNAL_SERVER_ERROR => {
+                                        panic!("INTERNAL_SERVER_ERROR")
+                                    }
                                     _ => panic!("Unexpected status code: {}", err),
                                 }
                             } else if err.is_timeout() {
@@ -81,33 +83,50 @@ fn main() {
                     if checked_comments.contains(&comment.id) {
                         continue;
                     } else {
-                        save_to_db(comment.id);
+                        save_to_db(Some(comment.id), None);
 
-                        // if comment.content has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
+                        // if comment content has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
                         let link_md_re = Regex::new(r"\[.+\]\((.+)\)").unwrap();
-                        let extracted_link = link_md_re.captures(&comment.content).map(|caps| caps.get(1).unwrap().as_str());
-                        let title_re = Regex::new(r"wikipedia.org/wiki/([0-9\w_()~\-%&$,]+)").unwrap();
-                        let haystack = if let Some(extracted) = extracted_link{ extracted } else { &comment.content };
+                        let extracted_link = link_md_re
+                            .captures(&comment.content)
+                            .map(|caps| caps.get(1).unwrap().as_str());
+                        let title_re = Regex::new(r"wikipedia.org/wiki/([^#\s]+)").unwrap();
+                        let section_re = Regex::new(r"(#\S+)").unwrap();
+                        let haystack = if let Some(extracted) = extracted_link {
+                            extracted
+                        } else {
+                            &comment.content
+                        };
                         let title = match title_re.captures(haystack) {
                             Some(caps) => caps.get(1).unwrap().as_str(),
                             None => continue,
                         };
+                        let extracted_section = section_re
+                            .captures(haystack)
+                            .map(|caps| caps.get(1).unwrap().as_str().to_string());
 
-                        let wiki_page = match get_wiki_page(title.to_string()) {
+                        let wiki_page = match get_wiki_page(title.to_string(), extracted_section) {
                             Some(wiki_page) => wiki_page,
                             None => continue,
                         };
-                        let built_comment = comment_builder(&wiki_page.title, &wiki_page.summary);
+
+                        let built_comment =
+                            comment_builder(&wiki_page.page_title, &wiki_page.content);
                         match client.create_comment(post.id, comment.id, built_comment.as_str()) {
                             Ok(_) => println!("Answered comment: {}", comment.id),
                             Err(err) => {
                                 if err.is_status() {
                                     match err.status().unwrap() {
-                                        StatusCode::TOO_MANY_REQUESTS => {
+                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
+                                            let mut new_vec = checked_comments.clone();
+                                            new_vec.pop();
+                                            save_to_db(None, Some(new_vec));
                                             sleep(Duration::new(5, 0));
                                             continue;
-                                        },
-                                        StatusCode::INTERNAL_SERVER_ERROR => panic!("INTERNAL_SERVER_ERROR"),
+                                        }
+                                        StatusCode::INTERNAL_SERVER_ERROR => {
+                                            panic!("INTERNAL_SERVER_ERROR")
+                                        }
                                         _ => panic!("Unexpected status code: {}", err),
                                     }
                                 } else if err.is_timeout() {

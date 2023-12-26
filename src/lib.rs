@@ -4,23 +4,32 @@ use std::path::Path;
 pub mod apis;
 pub mod structs;
 
-pub fn comment_builder(title: &str, summary: &str) -> String {
+pub fn comment_builder(page_title: &str, content: &str) -> String {
     format!(
-"Here's the summary for the wikipedia article you mentioned in your comment:
+        "Here's the summary for the wikipedia article you mentioned in your comment:
 
-> {}
+`{}`
 
 [^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)
-", summary, title)
+",
+        content.trim(),
+        page_title
+    )
 }
 
-pub fn save_to_db(comment_id: u32) {
+pub fn save_to_db(comment_id: Option<u32>, manual: Option<Vec<u32>>) {
     let vec_path = Path::new("checked_comments.json");
     if vec_path.exists() {
-        let file_content = fs::read_to_string(vec_path).unwrap();
-        let mut deserialized_vec = serde_json::from_str::<Vec<u32>>(&file_content).unwrap();
-        deserialized_vec.push(comment_id);
-        fs::write(vec_path, serde_json::to_string(&deserialized_vec).unwrap()).unwrap();
+        if let Some(id) = comment_id {
+            let file_content = fs::read_to_string(vec_path).unwrap();
+            let mut deserialized_vec = serde_json::from_str::<Vec<u32>>(&file_content).unwrap();
+            deserialized_vec.push(id);
+            fs::write(vec_path, serde_json::to_string(&deserialized_vec).unwrap()).unwrap();
+        } else {
+            // manual is supplied
+            let new_vec = manual.unwrap();
+            fs::write(vec_path, serde_json::to_string(&new_vec).unwrap()).unwrap();
+        }
     } else {
         panic!("checked_comments.json does not exist!")
     }
@@ -29,7 +38,7 @@ pub fn save_to_db(comment_id: u32) {
 pub fn load_db() -> Vec<u32> {
     let vec_path = Path::new("checked_comments.json");
     if !vec_path.exists() {
-        println!("checked_comments.vec file does not exist, creating it...");
+        println!("checked_comments.json file does not exist, creating it...");
         fs::write(vec_path, serde_json::to_vec(&vec![0_u32]).unwrap()).unwrap();
         Vec::new().push(0)
     }
