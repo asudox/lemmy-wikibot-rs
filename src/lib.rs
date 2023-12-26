@@ -1,19 +1,22 @@
 use std::fs;
 use std::path::Path;
 
+use structs::CustomWikipediaPage;
+
 pub mod apis;
 pub mod structs;
 
-pub fn comment_builder(page_title: &str, content: &str) -> String {
+pub fn comment_builder(wiki_page: CustomWikipediaPage) -> String {
     format!(
-        "Here's the summary for the wikipedia article you mentioned in your comment:
+        "Here's the {} for the wikipedia article you mentioned in your comment:
 
 `{}`
 
 [^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)
 ",
-        content.trim(),
-        page_title
+        if wiki_page.is_section{ "section" } else { "summary" },
+        wiki_page.content.trim(),
+        wiki_page.page_title,
     )
 }
 

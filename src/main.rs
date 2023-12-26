@@ -111,7 +111,7 @@ fn main() {
                         };
 
                         let built_comment =
-                            comment_builder(&wiki_page.page_title, &wiki_page.content);
+                            comment_builder(wiki_page);
                         match client.create_comment(post.id, comment.id, built_comment.as_str()) {
                             Ok(_) => println!("Answered comment: {}", comment.id),
                             Err(err) => {
