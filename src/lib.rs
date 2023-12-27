@@ -10,9 +10,9 @@ pub fn comment_builder(wiki_page: CustomWikipediaPage) -> String {
     format!(
         "Here's the {} for the wikipedia article you mentioned in your comment:
 
-```
+`
 {}
-```
+`
 
 [^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)
 ",
