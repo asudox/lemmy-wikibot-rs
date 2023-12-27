@@ -10,11 +10,17 @@ pub fn comment_builder(wiki_page: CustomWikipediaPage) -> String {
     format!(
         "Here's the {} for the wikipedia article you mentioned in your comment:
 
-`{}`
+```
+{}
+```
 
 [^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)
 ",
-        if wiki_page.is_section{ "section" } else { "summary" },
+        if wiki_page.is_section {
+            "section"
+        } else {
+            "summary"
+        },
         wiki_page.content.trim(),
         wiki_page.page_title,
     )
