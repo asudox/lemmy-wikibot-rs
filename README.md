@@ -15,3 +15,9 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 | LEMMY_COMMUNITY          | The community name (without the c/ prefix)                           |
 
 5. Run the bot: `cargo run --release`
+
+
+# TODO
+- [ ] Multiple wikipedia link support
+- [ ] Reply to mentions
+- [ ] Better error handling (?)
