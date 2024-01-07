@@ -40,7 +40,7 @@ pub fn save_to_db(comment_id: Option<u32>, manual: Option<Vec<u32>>) {
             fs::write(vec_path, serde_json::to_string(&new_vec).unwrap()).unwrap();
         }
     } else {
-        panic!("checked_comments.json does not exist!")
+        panic!("checked_comments.json does not exist!");
     }
 }
 
@@ -49,7 +49,7 @@ pub fn load_db() -> Vec<u32> {
     if !vec_path.exists() {
         println!("checked_comments.json file does not exist, creating it...");
         fs::write(vec_path, serde_json::to_vec(&vec![0_u32]).unwrap()).unwrap();
-        Vec::new().push(0)
+        Vec::new().push(0);
     }
     let file_content = fs::read_to_string(vec_path).unwrap();
 

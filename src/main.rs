@@ -80,7 +80,7 @@ fn main() {
                 for comment_view in comment_list_resp.comments {
                     let checked_comments: Vec<u32> = load_db();
                     let comment = comment_view.comment;
-                    if checked_comments.contains(&comment.id) {
+                    if checked_comments.contains(&comment.id) || comment.creator.bot_account {
                         continue;
                     } else {
                         save_to_db(Some(comment.id), None);

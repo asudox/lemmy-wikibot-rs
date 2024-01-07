@@ -1,6 +1,12 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
+pub struct Creator {
+    // pub name: String,
+    pub bot_account: bool,
+}
+
+#[derive(Deserialize)]
 pub struct Post {
     pub id: u32,
     pub locked: bool,
@@ -20,6 +26,7 @@ pub struct GetPostsResponse {
 pub struct Comment {
     pub id: u32,
     pub content: String,
+    pub creator: Creator,
 }
 
 #[derive(Deserialize)]
