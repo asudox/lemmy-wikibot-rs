@@ -26,12 +26,12 @@ pub struct GetPostsResponse {
 pub struct Comment {
     pub id: u32,
     pub content: String,
-    pub creator: Creator,
 }
 
 #[derive(Deserialize)]
 pub struct CommentView {
     pub comment: Comment,
+    pub creator: Creator,
 }
 
 #[derive(Deserialize)]
