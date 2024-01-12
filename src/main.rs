@@ -30,7 +30,7 @@ fn main() {
 
     std::thread::spawn({
         move || {
-            std::thread::sleep(Duration::new(10, 0)); // every 10 mins
+            std::thread::sleep(Duration::new(10*60, 0)); // every 10 mins
             check_inbox_clone.store(true, Ordering::SeqCst);
         }
     });
