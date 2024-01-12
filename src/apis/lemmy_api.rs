@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-use crate::structs::{GetCommentsResponse, GetPostsResponse, LoginResponse};
+use crate::structs::{
+    GetCommentsResponse, GetPostsResponse, GetPrivateMessagesResponse, LoginResponse,
+};
 
 pub struct LemmyClient {
     username_or_email: String,
@@ -99,5 +101,20 @@ impl LemmyClient {
             .error_for_status()?;
 
         Ok(())
+    }
+
+    pub fn get_pms(&self) -> Result<GetPrivateMessagesResponse, reqwest::Error> {
+        let params = [("auth", self.jwt.as_ref().unwrap())];
+        let resp: GetPrivateMessagesResponse = reqwest::blocking::Client::new()
+            .get(format!(
+                "https://{}/api/v3/private_message/list",
+                self.instance
+            ))
+            .query(&params)
+            .send()?
+            .error_for_status()?
+            .json()?;
+
+        Ok(resp)
     }
 }

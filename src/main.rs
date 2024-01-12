@@ -1,11 +1,12 @@
 use dotenv::dotenv;
 use lemmy_wikibot_rs::apis::lemmy_api::LemmyClient;
 use lemmy_wikibot_rs::apis::wikipedia_api::get_wiki_page;
-use lemmy_wikibot_rs::comment_builder;
-use lemmy_wikibot_rs::{load_db, save_to_db};
+use lemmy_wikibot_rs::*;
 use regex::Regex;
 use reqwest::StatusCode;
 use std::env;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -23,6 +24,16 @@ fn main() {
     // login to lemmy client
     let mut client = LemmyClient::new(username_or_email, password, instance, community);
     client.login();
+
+    let check_inbox = Arc::new(AtomicBool::new(false));
+    let check_inbox_clone = Arc::clone(&check_inbox);
+
+    std::thread::spawn({
+        move || {
+            std::thread::sleep(Duration::new(10, 0)); // every 10 mins
+            check_inbox_clone.store(true, Ordering::SeqCst);
+        }
+    });
 
     loop {
         println!("Getting posts");
@@ -78,12 +89,16 @@ fn main() {
                     };
                 sleep(Duration::new(2, 0));
                 for comment_view in comment_list_resp.comments {
-                    let checked_comments: Vec<u32> = load_db();
+                    let checked_comments: Vec<u32> = load_cc_db();
+                    let excluded_creators: Vec<u32> = load_ec_db();
                     let comment = comment_view.comment;
-                    if checked_comments.contains(&comment.id) || comment_view.creator.bot_account {
+                    if checked_comments.contains(&comment.id)
+                        || excluded_creators.contains(&comment_view.creator.id)
+                        || comment_view.creator.bot_account
+                    {
                         continue;
                     } else {
-                        save_to_db(Some(comment.id), None);
+                        save_to_cc_db(Some(comment.id), None);
 
                         // if comment content has a []() syntax, extract the link from it, and match it against title_re, otherwise try to match the whole comment content
                         let link_md_re = Regex::new(r"\[.+\]\((.+)\)").unwrap();
@@ -119,7 +134,7 @@ fn main() {
                                         StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
                                             let mut new_vec = checked_comments.clone();
                                             new_vec.pop();
-                                            save_to_db(None, Some(new_vec));
+                                            save_to_cc_db(None, Some(new_vec));
                                             sleep(Duration::new(5, 0));
                                             continue;
                                         }
@@ -141,6 +156,21 @@ fn main() {
                 }
             }
         }
-        sleep(Duration::new(10, 0));
+        sleep(Duration::new(5, 0));
+        if check_inbox.load(Ordering::SeqCst) {
+            if let Ok(pms) = client.get_pms() {
+                for private_message_view in pms.private_messages {
+                    let exluded_creators = load_ec_db();
+                    let private_message = private_message_view.private_message;
+                    if !exluded_creators.contains(&private_message_view.creator.id)
+                        && private_message.content.trim().to_lowercase() == "optout"
+                    {
+                        println!("Excluded user: {}", private_message_view.creator.id);
+                        save_to_ec_db(Some(private_message_view.creator.id), None);
+                    }
+                }
+            }
+        }
+        sleep(Duration::new(5, 0));
     }
 }
