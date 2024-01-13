@@ -42,7 +42,7 @@ fn main() {
             Err(err) => {
                 if err.is_status() {
                     match err.status().unwrap() {
-                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
+                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
                             sleep(Duration::new(5, 0));
                             continue;
                         }
@@ -70,7 +70,7 @@ fn main() {
                         Err(err) => {
                             if err.is_status() {
                                 match err.status().unwrap() {
-                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
+                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
                                         sleep(Duration::new(5, 0));
                                         continue;
                                     }
@@ -131,7 +131,7 @@ fn main() {
                             Err(err) => {
                                 if err.is_status() {
                                     match err.status().unwrap() {
-                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY => {
+                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
                                             let mut new_vec = checked_comments.clone();
                                             new_vec.pop();
                                             save_to_cc_db(None, Some(new_vec));
