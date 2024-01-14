@@ -30,8 +30,10 @@ fn main() {
 
     std::thread::spawn({
         move || {
-            std::thread::sleep(Duration::new(10*60, 0)); // every 10 mins
-            check_inbox_clone.store(true, Ordering::SeqCst);
+            loop {
+                std::thread::sleep(Duration::new(10 * 60, 0)); // every 10 mins
+                check_inbox_clone.store(true, Ordering::SeqCst);
+            }
         }
     });
 
@@ -42,7 +44,9 @@ fn main() {
             Err(err) => {
                 if err.is_status() {
                     match err.status().unwrap() {
-                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
+                        StatusCode::TOO_MANY_REQUESTS
+                        | StatusCode::BAD_GATEWAY
+                        | StatusCode::REQUEST_TIMEOUT => {
                             sleep(Duration::new(5, 0));
                             continue;
                         }
@@ -70,7 +74,9 @@ fn main() {
                         Err(err) => {
                             if err.is_status() {
                                 match err.status().unwrap() {
-                                    StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
+                                    StatusCode::TOO_MANY_REQUESTS
+                                    | StatusCode::BAD_GATEWAY
+                                    | StatusCode::REQUEST_TIMEOUT => {
                                         sleep(Duration::new(5, 0));
                                         continue;
                                     }
@@ -131,7 +137,9 @@ fn main() {
                             Err(err) => {
                                 if err.is_status() {
                                     match err.status().unwrap() {
-                                        StatusCode::TOO_MANY_REQUESTS | StatusCode::BAD_GATEWAY | StatusCode::REQUEST_TIMEOUT => {
+                                        StatusCode::TOO_MANY_REQUESTS
+                                        | StatusCode::BAD_GATEWAY
+                                        | StatusCode::REQUEST_TIMEOUT => {
                                             let mut new_vec = checked_comments.clone();
                                             new_vec.pop();
                                             save_to_cc_db(None, Some(new_vec));
@@ -169,6 +177,7 @@ fn main() {
                         save_to_ec_db(Some(private_message_view.creator.id), None);
                     }
                 }
+                check_inbox.store(false, Ordering::SeqCst);
             }
         }
         sleep(Duration::new(5, 0));
