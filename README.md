@@ -22,3 +22,4 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 - [ ] Multiple wikipedia link support
 - [ ] Better error handling (?)
 - [x] Opt-out functionality
+- [ ] Fix wikipedia section support
