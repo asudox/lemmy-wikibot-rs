@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use structs::CustomWikipediaPage;
+use apis::wikipedia_api::CustomWikipediaPage;
 
 pub mod apis;
 pub mod structs;
@@ -10,9 +10,7 @@ pub fn comment_builder(wiki_page: CustomWikipediaPage) -> String {
     format!(
         "Here's the {} for the wikipedia article you mentioned in your comment:
 
-`
-{}
-`
+**{}**
 
 ^to^ ^opt^ ^out^^,^ ^pm^ ^me^ ^'optout'.^
 [^article^](https://en.wikipedia.org/wiki/{}) ^|^ [^about^](https://lemmy.world/u/wikibot)

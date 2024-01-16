@@ -13,13 +13,15 @@ use std::time::Duration;
 fn main() {
     dotenv().unwrap();
 
-    let (username_or_email, password, instance, community) = (
+    let (username_or_email, password, instance, community, sentence_reduction_limit) = (
         env::var("LEMMY_USERNAME_OR_EMAIL")
             .expect("LEMMY_USERNAME_OR_EMAIL not configured in .env"),
         env::var("LEMMY_PASSWORD").expect("LEMMY_PASSWORD not configured in .env"),
         env::var("LEMMY_INSTANCE").expect("LEMMY_INSTANCE not configured in .env"),
         env::var("LEMMY_COMMUNITY").expect("LEMMY_COMMUNITY not configured in .env"),
+        env::var("SENTENCE_REDUCTION_LIMIT").expect("SENTENCE_REDUCTION_LIMIT not configured in .env"),
     );
+    let sentence_reduction_limit: u16 = sentence_reduction_limit.parse().expect("SENTENCE_REDUCTION_LIMIT is not a number within the range of u16");
 
     // login to lemmy client
     let mut client = LemmyClient::new(username_or_email, password, instance, community);
@@ -126,10 +128,11 @@ fn main() {
                             .captures(haystack)
                             .map(|caps| caps.get(1).unwrap().as_str().to_string());
 
-                        let wiki_page = match get_wiki_page(title.to_string(), extracted_section) {
+                        let mut wiki_page = match get_wiki_page(title.to_string(), extracted_section) {
                             Some(wiki_page) => wiki_page,
                             None => continue,
                         };
+                        wiki_page.reduce_sentences(sentence_reduction_limit);
 
                         let built_comment = comment_builder(wiki_page);
                         match client.create_comment(post.id, comment.id, built_comment.as_str()) {

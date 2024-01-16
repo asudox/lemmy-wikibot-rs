@@ -1,6 +1,28 @@
-use crate::structs::CustomWikipediaPage;
 use wikipedia::http::default::Client;
 use wikipedia::Wikipedia;
+use regex::Regex;
+
+pub struct CustomWikipediaPage {
+    pub page_title: String,
+    pub content: String,
+    pub is_section: bool,
+}
+
+impl CustomWikipediaPage{
+    pub fn reduce_sentences(&mut self, limit: u16){
+        let re = Regex::new(r"[^.!?]*[.!?]+").unwrap();
+        let mut sentences = Vec::new();
+        for cap in re.captures_iter(self.content.as_ref()) {
+            sentences.push(cap[0].to_owned());
+            if sentences.len() == limit as usize {
+                break;
+            }
+        }
+
+        let put_together_sentences: String = sentences.join(" ");
+        self.content = put_together_sentences;
+    }
+}
 
 pub fn get_wiki_page(
     page_title: String,
@@ -9,13 +31,13 @@ pub fn get_wiki_page(
     let wiki = Wikipedia::<Client>::default();
     let page = wiki.page_from_title(page_title.clone());
 
-    if section_title.is_some() {
+    if let Some(section_title) = section_title{
         // add the section name to the page_title
         let mut new_page_title = page_title;
-        new_page_title.push_str(&section_title.clone().unwrap());
+        new_page_title.push_str(&section_title);
 
         // isn't actually a summary, just the whole content of the section
-        let content = page.get_section_content(&section_title.unwrap().replace('#', ""));
+        let content = page.get_section_content(&section_title.replace('#', ""));
 
         let customwikipage: Option<CustomWikipediaPage> = match content {
             Ok(section_content) => section_content.map(|content| CustomWikipediaPage {

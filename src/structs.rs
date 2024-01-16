@@ -55,9 +55,3 @@ pub struct GetPrivateMessagesResponse {
 pub struct LoginResponse {
     pub jwt: String,
 }
-
-pub struct CustomWikipediaPage {
-    pub page_title: String,
-    pub content: String,
-    pub is_section: bool,
-}
