@@ -20,6 +20,6 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 
 # TODO
 - [ ] Multiple wikipedia link support
-- [ ] Reply to mentions
 - [ ] Better error handling (?)
 - [x] Opt-out functionality
+- [ ] Fix wikipedia section support
