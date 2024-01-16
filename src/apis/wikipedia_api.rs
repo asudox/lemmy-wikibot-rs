@@ -1,6 +1,6 @@
+use regex::Regex;
 use wikipedia::http::default::Client;
 use wikipedia::Wikipedia;
-use regex::Regex;
 
 pub struct CustomWikipediaPage {
     pub page_title: String,
@@ -8,8 +8,8 @@ pub struct CustomWikipediaPage {
     pub is_section: bool,
 }
 
-impl CustomWikipediaPage{
-    pub fn reduce_sentences(&mut self, limit: u16){
+impl CustomWikipediaPage {
+    pub fn reduce_sentences(&mut self, limit: u16) {
         let re = Regex::new(r"[^.!?]*[.!?]+").unwrap();
         let mut sentences = Vec::new();
         for cap in re.captures_iter(self.content.as_ref()) {
@@ -31,7 +31,7 @@ pub fn get_wiki_page(
     let wiki = Wikipedia::<Client>::default();
     let page = wiki.page_from_title(page_title.clone());
 
-    if let Some(section_title) = section_title{
+    if let Some(section_title) = section_title {
         // add the section name to the page_title
         let mut new_page_title = page_title;
         new_page_title.push_str(&section_title);
