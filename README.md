@@ -5,7 +5,7 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
     - Install Rust if you haven't yet: https://www.rust-lang.org/tools/install
 
 3. Compile it with cargo: `cargo build --release`
-4. Create a new .env file in the directory with the following elements:
+4. Edit the `.env` file according to this table:
 
 | Key                      | Value                                                                |
 |--------------------------|----------------------------------------------------------------------|
@@ -22,4 +22,4 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 - [ ] Multiple wikipedia link support
 - [ ] Better error handling (?)
 - [x] Opt-out functionality
-- [ ] Remove wikipedia section support
+- [ ] Fix wikipedia section support
