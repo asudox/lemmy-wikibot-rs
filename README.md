@@ -1,5 +1,5 @@
 # lemmy-wikibot-rs
-A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
+A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia articles and reply to them.
 
 ## How to run locally
 1. Clone the repository: `git clone https://github.com/Asudox/lemmy-wikibot-rs.git`
