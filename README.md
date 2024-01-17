@@ -1,6 +1,7 @@
+# lemmy-wikibot-rs
 A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 
-# How to run locally
+## How to run locally
 1. Clone the repository: `git clone https://github.com/Asudox/lemmy-wikibot-rs.git`
     - Install Rust if you haven't yet: https://www.rust-lang.org/tools/install
 
@@ -18,8 +19,11 @@ A lemmy bot written in Rust to summarize wikipedia articles and reply to them.
 5. Run the bot: `cargo run --release`
 
 
-# TODO
+## TODO
 - [ ] Multiple wikipedia link support
 - [ ] Better error handling (?)
 - [x] Opt-out functionality
 - [ ] Fix wikipedia section support
+
+## License
+This project is licensed under the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html).
