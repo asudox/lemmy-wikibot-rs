@@ -117,4 +117,19 @@ impl LemmyClient {
 
         Ok(resp)
     }
+
+    pub fn create_pm(&self, recipient_id: u32, content: &str) -> Result<(), reqwest::Error> {
+        reqwest::blocking::Client::new()
+            .post(format!("https://{}/api/v3/private_message", self.instance))
+            .json(&serde_json::json!({
+                "content": content,
+                "recipient_id": recipient_id,
+                "auth": self.jwt.as_ref().unwrap()
+            }))
+            // .bearer_auth(self.jwt.as_ref().unwrap()) // can be used when lemmy.world upgrades to 0.19v, remove auth from json body and uncomment this
+            .send()?
+            .error_for_status()?;
+
+        Ok(())
+    }
 }

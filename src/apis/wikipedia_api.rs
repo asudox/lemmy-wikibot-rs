@@ -1,12 +1,7 @@
+use crate::structs::CustomWikipediaPage;
 use regex::Regex;
 use wikipedia::http::default::Client;
 use wikipedia::Wikipedia;
-
-pub struct CustomWikipediaPage {
-    pub page_title: String,
-    pub content: String,
-    pub is_section: bool,
-}
 
 impl CustomWikipediaPage {
     pub fn reduce_sentences(&mut self, limit: u16) {

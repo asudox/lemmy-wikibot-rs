@@ -36,7 +36,7 @@ fn main() {
     std::thread::spawn({
         move || {
             loop {
-                std::thread::sleep(Duration::new(10 * 60, 0)); // every 10 mins
+                std::thread::sleep(Duration::new(5, 0)); // every 10 mins
                 check_inbox_clone.store(true, Ordering::SeqCst);
             }
         }
@@ -182,6 +182,9 @@ fn main() {
                     {
                         println!("Excluded user: {}", private_message_view.creator.id);
                         save_to_ec_db(Some(private_message_view.creator.id), None);
+                        if client.create_pm(private_message_view.creator.id, "You have been successfully opted out. The bot will no longer respond to your comments containing wikipedia links.").is_ok(){ // wait 1 second if the pm was sent successfully to avoid rate limit
+                            sleep(Duration::new(1, 0))
+                        }; // any errors will be ignored
                     }
                 }
                 check_inbox.store(false, Ordering::SeqCst);

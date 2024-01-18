@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use apis::wikipedia_api::CustomWikipediaPage;
+use crate::structs::CustomWikipediaPage;
 
 pub mod apis;
 pub mod structs;
