@@ -1,5 +1,3 @@
-# THIS PROJECT HAS BEEN MOVED TO GITLAB: https://gitlab.com/Asudox/lemmy-wikibot-rs
-
 # lemmy-wikibot-rs
 A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia articles and reply to them.
 
