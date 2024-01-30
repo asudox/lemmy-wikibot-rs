@@ -5,7 +5,7 @@ use wikipedia::Wikipedia;
 
 impl CustomWikipediaPage {
     pub fn reduce_sentences(&mut self, limit: u16) {
-        let re = Regex::new(r"[^.!?]*[.!?]+").unwrap();
+        let re = Regex::new(r"[^.]*[.]+").unwrap();
         let mut sentences = Vec::new();
         for cap in re.captures_iter(self.content.as_ref()) {
             sentences.push(cap[0].to_owned());
