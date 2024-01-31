@@ -77,6 +77,7 @@ fn main() {
                     continue;
                 },
             };
+            println!("title: {}", title);
             let extracted_section = section_re
                 .captures(haystack)
                 .map(|caps| caps.get(1).unwrap().as_str().to_owned());
@@ -84,7 +85,10 @@ fn main() {
             // get a new CustomWikipediaPage and reduce the summary sentences
             let mut wiki_page = match get_wiki_page(title.to_string(), extracted_section) {
                 Some(wiki_page) => wiki_page,
-                None => continue,
+                None => {
+                    client.create_comment(post.id, comment.id, "Sorry, I could not get the wikipedia summary for the wikipedia link mentioned in your comment.".to_owned()).ok().unwrap(); // errors here get ignored, might add an error handler here as well
+                    continue;
+                },
             };
             wiki_page.reduce_sentences(sentence_reduction_limit);
 
