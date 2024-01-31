@@ -13,7 +13,7 @@ A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia ar
 | LEMMY_USERNAME_OR_EMAIL  | The username or email of the lemmy bot                               |
 | LEMMY_PASSWORD           | The password of the lemmy bot                                        |
 | LEMMY_INSTANCE           | The domain name of the lemmy instance where the bot is registered at |
-| LEMMY_COMMUNITY          | The LOCAL community name (without the c/ prefix)                     |
+| ~~LEMMY_COMMUNITY~~      | ~~The LOCAL community name (without the c/ prefix)~~                 |
 | SENTENCE_REDUCTION_LIMIT | The sentence reduction limit (recommended value: 5)                  |
 
 5. Run the bot: `cargo run --release`
