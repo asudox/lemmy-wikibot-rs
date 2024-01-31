@@ -77,7 +77,6 @@ fn main() {
                     continue;
                 },
             };
-            println!("title: {}", title);
             let extracted_section = section_re
                 .captures(haystack)
                 .map(|caps| caps.get(1).unwrap().as_str().to_owned());
