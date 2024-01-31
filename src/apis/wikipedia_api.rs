@@ -4,7 +4,7 @@ use wikipedia::http::default::Client;
 use wikipedia::Wikipedia;
 
 impl CustomWikipediaPage {
-    pub fn reduce_sentences(&mut self, limit: u16) {
+    pub fn reduce_sentences(&mut self, limit: u8) {
         let re = Regex::new(r"[^.]*[.]+").unwrap();
         let mut sentences = Vec::new();
         for cap in re.captures_iter(self.content.as_ref()) {

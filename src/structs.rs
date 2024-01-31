@@ -13,10 +13,10 @@ pub struct Post {
     pub locked: bool,
 }
 
-#[derive(Deserialize)]
-pub struct PostView {
-    pub post: Post,
-}
+// #[derive(Deserialize)]
+// pub struct PostView {
+//     pub post: Post,
+// }
 
 #[derive(Deserialize)]
 pub struct PrivateMessageView {
@@ -24,10 +24,12 @@ pub struct PrivateMessageView {
     pub creator: User,
 }
 
-#[derive(Deserialize)]
-pub struct GetPostsResponse {
-    pub posts: Vec<PostView>,
-}
+// no longer used
+
+// #[derive(Deserialize)]
+// pub struct GetPostsResponse {
+//     pub posts: Vec<PostView>,
+// }
 
 #[derive(Deserialize)]
 pub struct Comment {
@@ -49,6 +51,25 @@ pub struct GetCommentsResponse {
 #[derive(Deserialize)]
 pub struct GetPrivateMessagesResponse {
     pub private_messages: Vec<PrivateMessageView>,
+}
+
+#[derive(Deserialize)]
+pub struct PersonMention {
+    pub id: u32,
+    pub read: bool,
+}
+
+#[derive(Deserialize)]
+pub struct UserMentionView {
+    pub comment: Comment,
+    pub creator: User,
+    pub post: Post,
+    pub person_mention: PersonMention,
+}
+
+#[derive(Deserialize)]
+pub struct GetUserMentionsResponse {
+    pub mentions: Vec<UserMentionView>,
 }
 
 #[derive(Deserialize)]
