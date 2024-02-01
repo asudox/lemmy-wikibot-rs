@@ -22,6 +22,7 @@ A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia ar
 - [ ] Multiple wikipedia link support
 - [ ] Better error handling (?)
 - [ ] Fix wikipedia section support
+- [ ] Add wikipedia search functionality
 
 ## License
 This project is licensed under the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.html).
