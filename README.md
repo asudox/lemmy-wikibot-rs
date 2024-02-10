@@ -8,7 +8,7 @@ A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia ar
 3. Compile it with cargo: `cargo build --release`
 4. Edit the `.env` file according to this table:
 
-| Key                      | Value                                                                |
+| Key                      | Description                                                          |
 |--------------------------|----------------------------------------------------------------------|
 | LEMMY_USERNAME_OR_EMAIL  | The username or email of the lemmy bot                               |
 | LEMMY_PASSWORD           | The password of the lemmy bot                                        |
