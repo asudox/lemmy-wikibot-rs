@@ -1,5 +1,3 @@
-# Project archived due to it having no significant real usability in Lemmy currently.
-
 # lemmy-wikibot-rs
 A [Lemmy](https://join-lemmy.org/) bot written in Rust to summarize wikipedia articles and reply to them.
 
